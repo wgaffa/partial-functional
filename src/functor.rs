@@ -20,20 +20,35 @@ impl<A, B, E> Functor<A, B> for Result<A, E> {
 mod tests {
     use std::convert::identity;
 
+    use paste::paste;
     use quickcheck::TestResult;
     use quickcheck_macros::quickcheck;
 
     use super::*;
 
     // fmap id = id
-    #[quickcheck]
-    fn test_functor_identity_law_with_option(value: Option<u32>) -> bool {
-        value.fmap(identity) == identity(value)
+    macro_rules! functor_identity {
+        ( $(($a:ident, $b:ty)),* $(,)? ) => {
+            $(
+                paste!{
+                    #[quickcheck]
+                    fn [<functor_identity_law_with_ $a>](value: $b) -> bool {
+                        value.fmap(identity) == identity(value)
+                    }
+                }
+            )*
+        };
     }
 
-    #[quickcheck]
-    fn test_functor_identity_law_with_result(value: Result<u32, u8>) -> bool {
-        value.fmap(identity) == identity(value)
+    functor_identity!((option, Option<u32>), (result, Result<u32, u8>),);
+
+    macro_rules! assert_composition {
+        ( $name:ident, $f:expr, $g:expr ) => {
+            let f = $f;
+            let g = $g;
+
+            TestResult::from_bool($name.fmap(|x| g(f(x))) == $name.fmap(f).fmap(g))
+        }
     }
 
     // fmap ( f . g ) == fmap f . fmap g
@@ -46,10 +61,11 @@ mod tests {
             }
         }
 
-        let add = |x| x + 2; // f
-        let multiply = |x| x * 2; // g
-
-        TestResult::from_bool(value.fmap(|x| multiply(add(x))) == value.fmap(add).fmap(multiply))
+        assert_composition!{
+            value,
+            |x| x + 2,
+            |x| x * 2
+        }
     }
 
     #[quickcheck]
@@ -61,9 +77,10 @@ mod tests {
             }
         }
 
-        let add = |x| x + 2; // f
-        let multiply = |x| x * 2; // g
-
-        TestResult::from_bool(value.fmap(|x| multiply(add(x))) == value.fmap(add).fmap(multiply))
+        assert_composition!{
+            value,
+            |x| x + 2,
+            |x| x * 2
+        }
     }
 }
