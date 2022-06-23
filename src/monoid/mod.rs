@@ -1,30 +1,16 @@
-use monoid_derive::*;
-
 mod last;
 mod sum;
+mod product;
 
-pub use last::Last;
-pub use sum::Sum;
+pub use self::{
+    last::Last,
+    sum::Sum,
+};
 
 use crate::semigroup::Semigroup;
 
 pub trait Monoid: Semigroup {
     fn empty() -> Self;
-}
-
-#[derive(Debug, Semigroup)]
-pub struct Product<T>(pub T);
-
-impl<T: Semigroup + num_traits::Num> Monoid for Product<T> {
-    fn empty() -> Self {
-        Self(num_traits::identities::One::one())
-    }
-}
-
-impl<T> From<T> for Product<T> {
-    fn from(value: T) -> Self {
-        Self(value)
-    }
 }
 
 impl<T: Semigroup + Default> Monoid for T {
@@ -64,30 +50,6 @@ mod tests {
             .combine(42.into());
 
         assert_eq!(x.0, Some(42));
-    }
-
-    #[test]
-    fn sum_test() {
-        let nums = vec![10, 24, 3, 7, 42];
-        let sum = nums
-            .into_iter()
-            .fold(Sum::empty(), |acc, x| acc.combine(Sum::from(x)));
-
-        assert_eq!(sum, 86);
-    }
-
-    #[test]
-    fn option_sum() {
-        let sum = None
-            .combine(Some(Sum::from(10)))
-            .combine(None)
-            .combine(Some(Sum::from(5)))
-            .combine(Some(Sum::from(7)))
-            .combine(None)
-            .combine(Some(Sum::from(42)))
-            .combine(None);
-
-        assert_eq!(sum.unwrap(), 64);
     }
 
     #[test]

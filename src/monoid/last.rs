@@ -59,8 +59,15 @@ mod tests {
 
     #[quickcheck]
     fn last_is_set_to_the_last_non_none_value_in_a_list(vec: Vec<Last<u32>>) -> bool {
-        let last = vec.iter().copied().rfind(|x| *x != Last(None)).unwrap_or_default();
-        let right = vec.iter().copied().fold(Last::default(), |a, x| a.combine(x));
+        let last = vec
+            .iter()
+            .copied()
+            .rfind(|x| *x != Last(None))
+            .unwrap_or_default();
+        let right = vec
+            .iter()
+            .copied()
+            .fold(Last::default(), |a, x| a.combine(x));
 
         last == right
     }
