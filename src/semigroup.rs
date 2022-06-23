@@ -51,6 +51,7 @@ impl<T> Semigroup for PhantomData<T> {
 }
 
 #[macro_export]
+#[deprecated(note="This will be replaced, or already is replaced with a derive macro")]
 macro_rules! semigroup_default {
     ($t:ty : $($i:ident),*) => {
         impl Semigroup for $t {
@@ -69,28 +70,30 @@ macro_rules! semigroup_default {
 mod tests {
     use super::*;
     use crate::monoid::{Last, Sum};
-    use test_case::test_case;
+    use quickcheck_macros::quickcheck;
 
-    #[test_case(Some(5), Some(7) => Some(12))]
-    #[test_case(Some(5), None => Some(5))]
-    #[test_case(None, Some(7) => Some(7))]
-    #[test_case(None, None => None)]
-    fn option_combine(left: Option<u32>, right: Option<u32>) -> Option<u32> {
-        left.combine(right)
+    #[quickcheck]
+    fn combine_option_is_the_sum_of_both(left: Option<u32>, right: Option<u32>) -> bool {
+        // cast everything to u64 so that we don't overflow when adding them up
+        let sum = match (left, right) {
+            (None, None) => None,
+            (None, Some(x)) => Some(x as u64),
+            (Some(x), None) => Some(x as u64),
+            (Some(x), Some(y)) => Some(x as u64 + y as u64),
+        };
+
+        let left = left.map(|x| x as u64);
+        let right = right.map(|x| x as u64);
+        let result = left.combine(right);
+
+        sum == result
     }
 
-    #[test]
-    fn option_sum() {
-        let sum = None
-            .combine(Some(Sum::from(10)))
-            .combine(None)
-            .combine(Some(Sum::from(5)))
-            .combine(Some(Sum::from(7)))
-            .combine(None)
-            .combine(Some(Sum::from(42)))
-            .combine(None);
+    #[quickcheck]
+    fn option_associativity_property(x: Option<u8>, y: Option<u8>, z: Option<u8>) -> bool {
+        let (x, y, z) = (x.map(|x| x as u16), y.map(|x| x as u16), z.map(|x| x as u16));
 
-        assert_eq!(sum.unwrap(), 64);
+        x.combine(y.combine(z)) == x.combine(y).combine(z)
     }
 
     #[test]
