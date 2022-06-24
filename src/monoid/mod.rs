@@ -1,10 +1,17 @@
 mod last;
+mod first;
 mod sum;
 mod product;
+mod any;
+mod all;
 
 pub use self::{
     last::Last,
+    first::First,
     sum::Sum,
+    product::Product,
+    any::Any,
+    all::All,
 };
 
 use crate::semigroup::Semigroup;
