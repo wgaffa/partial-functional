@@ -1,4 +1,4 @@
-use std::marker::PhantomData;
+use std::{marker::PhantomData, cmp::Ordering};
 
 pub trait Semigroup {
     fn combine(self, rhs: Self) -> Self;
@@ -18,6 +18,25 @@ impl<T: Semigroup> Semigroup for Option<T> {
         match (self, rhs) {
             (Some(left), Some(right)) => Some(left.combine(right)),
             (left, right) => left.or(right),
+        }
+    }
+}
+
+impl<T, E> Semigroup for Result<T, E> {
+    fn combine(self, rhs: Self) -> Self {
+        match (self, rhs) {
+            (Err(_), b) => b,
+            (a, _) => a,
+        }
+    }
+}
+
+impl Semigroup for Ordering {
+    fn combine(self, rhs: Self) -> Self {
+        match (self, rhs) {
+            (Ordering::Less, _) => Ordering::Less,
+            (Ordering::Equal, y) => y,
+            (Ordering::Greater, _) => Ordering::Greater,
         }
     }
 }
