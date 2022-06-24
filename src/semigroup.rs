@@ -1,5 +1,9 @@
 use std::{marker::PhantomData, cmp::Ordering};
 
+/// The trait combines two types into another one.
+///
+/// The combining of several types must be associative, meaning that they can be evaluated in any order.
+/// `first.combine(second.combine(third)) == first.combine(second).combine(third)`
 pub trait Semigroup {
     fn combine(self, rhs: Self) -> Self;
 }
@@ -13,6 +17,17 @@ macro_rules! combine {
     };
 }
 
+/// Returns the combination of both Some variants, if one is None then the other is returned.
+/// ```
+/// use partial_functional::semigroup::Semigroup;
+///
+/// let five = Some(5);
+/// let ten = Some(10);
+///
+/// assert_eq!(Some(15), five.combine(ten));
+/// assert_eq!(Some(5), five.combine(None));
+/// assert_eq!(Some(10), None.combine(ten));
+/// ```
 impl<T: Semigroup> Semigroup for Option<T> {
     fn combine(self, rhs: Self) -> Self {
         match (self, rhs) {
@@ -22,6 +37,22 @@ impl<T: Semigroup> Semigroup for Option<T> {
     }
 }
 
+/// Returns the first Result if it's an Ok variant, otherwise returns the second
+///
+/// # Examples
+/// ```
+/// use partial_functional::semigroup::Semigroup;
+///
+/// let five: Result<u32, &'static str> = Ok(5);
+/// let two_kb: Result<u32, &'static str> = Ok(2048);
+/// let err: Result<u32, &'static str> = Err("An error occured");
+/// let err_again: Result<u32, &'static str> = Err("Another error");
+///
+/// assert_eq!(Ok(5), five.combine(err.clone()));
+/// assert_eq!(Ok(2048), two_kb.combine(five.clone()));
+/// assert_eq!(Ok(2048), two_kb.combine(five));
+/// assert_eq!(Err("Another error"), err.combine(err_again));
+/// ```
 impl<T, E> Semigroup for Result<T, E> {
     fn combine(self, rhs: Self) -> Self {
         match (self, rhs) {
@@ -31,6 +62,26 @@ impl<T, E> Semigroup for Result<T, E> {
     }
 }
 
+/// This combines two Ordering operations into one. 'first.cmp(second)' for example gives back an Ordering.
+/// If we have several types you wish to compare say name and age for example. We can first order by name and then age.
+///
+/// # Examples
+/// ```
+/// # use std::cmp::Ordering;
+/// use partial_functional::semigroup::Semigroup;
+///
+/// struct Person {
+///     name: String,
+///     age: u8,
+/// }
+///
+/// let first = Person { name: String::from("Chris"), age: 43 };
+/// let second = Person { name: String::from("Chris"), age: 23 };
+///
+/// let fst_compared_to_snd = first.name.cmp(&second.name).combine(first.age.cmp(&second.age));
+///
+/// assert_eq!(Ordering::Greater, fst_compared_to_snd);
+/// ```
 impl Semigroup for Ordering {
     fn combine(self, rhs: Self) -> Self {
         match (self, rhs) {
@@ -56,12 +107,6 @@ macro_rules! impl_semigroup_with_addition {
 impl_semigroup_with_addition!(
     usize, isize, u8, i8, u16, i16, u32, i32, u64, i64, u128, i128, f32, f64
 );
-
-impl Semigroup for bool {
-    fn combine(self, rhs: Self) -> Self {
-        self || rhs
-    }
-}
 
 impl<T> Semigroup for PhantomData<T> {
     fn combine(self, _rhs: Self) -> Self {
