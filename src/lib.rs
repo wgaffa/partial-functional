@@ -38,11 +38,17 @@
 //!     OrderLine { product_code: String::from("CCC"), quantity: Sum(3), price: Sum(3.99) },
 //! ];
 //!
-//! let total = order_lines
+//! let mut total = order_lines
 //!     .into_iter()
 //!     .fold(OrderLine::empty(), |acc, item| acc.combine(item));
 //!
 //! let expected = OrderLine { product_code: "TOTAL".into(), quantity: 6.into(), price: 25.96.into() };
+//! assert_eq!(expected, total);
+//!
+//! let new_line = OrderLine { product_code: "DDD".into(), quantity: 1.into(), price: 29.98.into() };
+//! total = total.combine(new_line);
+//!
+//! let expected = OrderLine { product_code: "TOTAL".into(), quantity: 7.into(), price: 55.94.into() };
 //! assert_eq!(expected, total);
 //! ```
 
