@@ -65,7 +65,7 @@ pub use semigroup::Semigroup;
 
 pub mod prelude {
     pub use crate::{
-        monoid::{All, Any, First, Last, Monoid, Product, Sum},
+        monoid::{All, Any, First, Last, Monoid, Product, Sum, Min, Max},
         semigroup::Semigroup,
     };
 }
