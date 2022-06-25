@@ -4,6 +4,8 @@ mod sum;
 mod product;
 mod any;
 mod all;
+mod min;
+mod max;
 
 pub use self::{
     last::Last,
@@ -12,6 +14,8 @@ pub use self::{
     product::Product,
     any::Any,
     all::All,
+    min::Min,
+    max::Max,
 };
 
 use crate::semigroup::Semigroup;
