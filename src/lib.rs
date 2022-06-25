@@ -51,6 +51,8 @@
 //! let expected = OrderLine { product_code: "TOTAL".into(), quantity: 7.into(), price: 55.94.into() };
 //! assert_eq!(expected, total);
 //! ```
+//!
+//! A more elaborate example of the above can be run with `cargo run --example orderline`
 
 pub mod functor;
 pub mod hkt;
