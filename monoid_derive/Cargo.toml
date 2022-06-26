@@ -1,5 +1,5 @@
 [package]
-name = "partial_derive"
+name = "partfun_derive"
 version = "0.1.0"
 edition = "2021"
 description = "Used by other partial-* crates"
