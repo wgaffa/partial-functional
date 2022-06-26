@@ -60,7 +60,7 @@ pub mod monoid;
 pub mod semigroup;
 
 pub use hkt::*;
-pub use monoid::{All, Any, First, Last, Monoid, Product, Sum};
+pub use monoid::{All, Any, First, Last, Monoid, Product, Sum, Min, Max};
 pub use semigroup::Semigroup;
 
 pub mod prelude {
