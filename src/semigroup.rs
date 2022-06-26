@@ -92,6 +92,18 @@ impl Semigroup for Ordering {
     }
 }
 
+impl Semigroup for String {
+    fn combine(self, rhs: Self) -> Self {
+        self + &rhs
+    }
+}
+
+impl<T> Semigroup for Vec<T> {
+    fn combine(mut self, rhs: Self) -> Self {
+        self.extend(rhs);
+        self
+    }
+}
 macro_rules! impl_semigroup_with_addition {
     ( $($x:ty),* ) => {
         $(
