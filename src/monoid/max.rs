@@ -1,6 +1,11 @@
 use crate::semigroup::Semigroup;
 use num_traits::Bounded;
 
+/// Semigroup over the Maximum of T if T implements [std::cmp::Ord].
+/// ```
+/// # use partial_functional::{Max, Semigroup};
+/// assert_eq!(Max(10), Max(10).combine(Max(5)));
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Max<T>(pub T);
 

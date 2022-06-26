@@ -2,6 +2,13 @@ use num_traits;
 
 use crate::semigroup::Semigroup;
 
+/// Semigroup of the Product of type T if type T implements num_traits::Num.
+/// ```
+/// # use partial_functional::prelude::*;
+/// let five = Product(5);
+/// let ten = Product(10);
+/// assert_eq!(Product(50), five.combine(ten));
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Product<T>(pub T);
 

@@ -1,5 +1,15 @@
 use crate::semigroup::Semigroup;
 
+/// A semigroup over Option by returning the last value available.
+/// ```
+/// # use partial_functional::prelude::*;
+/// let five = Last::from(5);
+/// let no_value = Last(None);
+/// let ten = Last::from(10);
+/// assert_eq!(Last::from(5), ten.combine(five));
+/// assert_eq!(Last::from(10), ten.combine(no_value));
+/// assert_eq!(Last(None), no_value.combine(no_value));
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Last<T>(pub Option<T>);
 

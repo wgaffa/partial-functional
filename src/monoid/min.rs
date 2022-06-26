@@ -1,6 +1,11 @@
 use crate::semigroup::Semigroup;
 use num_traits::Bounded;
 
+/// Semigroup over the Minimum of T if T implements [std::cmp::Ord].
+/// ```
+/// # use partial_functional::{Min, Semigroup};
+/// assert_eq!(Min(5), Min(10).combine(Min(5)));
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Min<T>(pub T);
 

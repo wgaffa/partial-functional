@@ -1,5 +1,14 @@
 use crate::semigroup::Semigroup;
 
+/// Semigroup of the Sum of type T if type T implements [std::ops::Add].
+/// ```
+/// # use partial_functional::prelude::*;
+///
+/// let five = Sum(5);
+/// let ten = Sum(10);
+///
+/// assert_eq!(Sum(15), five.combine(ten));
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Sum<T>(pub T);
 

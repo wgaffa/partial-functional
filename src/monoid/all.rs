@@ -1,5 +1,12 @@
 use crate::semigroup::Semigroup;
 
+/// Boolean semigroup over the operator &&.
+/// ```
+/// # use partial_functional::{All, Semigroup};
+/// assert_eq!(All(false), All(false).combine(All(true)));
+/// assert_eq!(All(true), All(true).combine(All(true)));
+/// assert_eq!(All(false), All(true).combine(All(false)));
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct All(pub bool);
 

@@ -1,5 +1,15 @@
 use crate::semigroup::Semigroup;
 
+/// A semigroup over Option by returning the first value available.
+/// ```
+/// # use partial_functional::prelude::*;
+/// let five = First::from(5);
+/// let no_value = First(None);
+/// let ten = First::from(10);
+/// assert_eq!(First::from(10), ten.combine(five));
+/// assert_eq!(First::from(10), ten.combine(no_value));
+/// assert_eq!(First(None), no_value.combine(no_value));
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct First<T>(pub Option<T>);
 
