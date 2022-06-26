@@ -30,22 +30,6 @@ impl<T: Semigroup + Default> Monoid for T {
     }
 }
 
-#[macro_export]
-#[deprecated(note="This will be removed, I am unsure why this was here in the first place")]
-macro_rules! monoid_default {
-    ($t:ty : $($i:ident),*) => {
-        impl Monoid for $t {
-            fn empty() -> Self {
-                Self {
-                    $(
-                        $i: Monoid::empty(),
-                    )*
-                }
-            }
-        }
-    };
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
