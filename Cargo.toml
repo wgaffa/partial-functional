@@ -2,6 +2,9 @@
 name = "partial-functional"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "A small collection of Semigroups and Monoids for rust"
+repository = "https://github.com/wgaffa/partial-functional"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
