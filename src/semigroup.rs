@@ -1,4 +1,4 @@
-use std::{marker::PhantomData, cmp::Ordering};
+use std::{cmp::Ordering, marker::PhantomData};
 
 /// The trait combines two types into another one.
 ///
@@ -8,9 +8,20 @@ pub trait Semigroup {
     fn combine(self, rhs: Self) -> Self;
 }
 
+/// This is just a small convienience macro to chain several combines together. Everthing after the first expression
+/// has to have a From<T> implementation for that type.
+///
+/// # Examples
+/// ```
+/// use partial_functional::prelude::*;
+/// use partial_functional::combine;
+///
+/// let min = combine!{ Min::empty(), 10, 30, 20 };
+/// assert_eq!(Min(10), min);
+/// ```
 #[macro_export]
 macro_rules! combine {
-    ( $init:expr => $($x:expr),+ $(,)? ) => {
+    ( $init:expr , $($x:expr),+ $(,)? ) => {
         $init$(
             .combine($x.into())
         )*
@@ -167,7 +178,11 @@ mod tests {
 
     #[quickcheck]
     fn option_associativity_property(x: Option<u8>, y: Option<u8>, z: Option<u8>) -> bool {
-        let (x, y, z) = (x.map(|x| x as u16), y.map(|x| x as u16), z.map(|x| x as u16));
+        let (x, y, z) = (
+            x.map(|x| x as u16),
+            y.map(|x| x as u16),
+            z.map(|x| x as u16),
+        );
 
         x.combine(y.combine(z)) == x.combine(y).combine(z)
     }
@@ -175,7 +190,7 @@ mod tests {
     #[test]
     fn option_combine_macro() {
         let sum: Option<Sum<i32>> = crate::combine!(
-            None =>
+            None,
             Sum::from(10),
             None,
             Sum::from(5),
@@ -191,7 +206,7 @@ mod tests {
     #[test]
     fn combine_macro() {
         let x = crate::combine! {
-            Last::from(53) => None, 42, {let b = None; b},
+            Last::from(53), None, 42, {let b = None; b},
         };
 
         assert_eq!(x.0, Some(42));

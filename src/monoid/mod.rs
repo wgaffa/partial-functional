@@ -66,7 +66,7 @@ mod tests {
     #[test]
     fn option_combine_macro() {
         let sum: Option<Sum<i32>> = crate::combine!(
-            None =>
+            None,
             Sum::from(10),
             None,
             Sum::from(5),
@@ -82,7 +82,7 @@ mod tests {
     #[test]
     fn combine_macro() {
         let x = crate::combine! {
-            Last::from(53) => None, 42, {let b = None; b},
+            Last::from(53), None, 42, {let b = None; b},
         };
 
         assert_eq!(x.0, Some(42));

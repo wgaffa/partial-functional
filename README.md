@@ -5,37 +5,32 @@ My main goal was to learn more rust and this came out of
 when I did a "partial-config" in Rust and decided to make it into a self contained
 crate.
 
-## The Traits
 ### Semigroup
-The
-Semigroup defines a type that can be **combined** with another type of itself to
-produce a new one of the same type.
+A semigroup is a type that can be **combined** with another type to create a new one of the same type. The rust
+number primitives like u32 under the Addition operator is an example of that, e.g 5 + 2 will give a new u32 of 7.
+Some more interresting semigroups are Option<T> if T is also a semigroup as well as Result<T, E> if both T and E are semigroups.
 
 ### Monoid
-A Monoid is a subtrait of Semigroup
-and adds the **identity** aspect the type. An **identity** is like std::default::Default
-and infact, any type that implements (Default + Semigroup) is also a Monoid.
+A monoid is a subtrait of Semigroup with the additional property of **identity**. The **empty** identity and rusts
+standard library Default trait can be interchangibly used. Any type that implements Semigroup and Default will
+get a blanket implementation for Monoid.
 
-### HKT
-This is a lightweight Higher Kind Type (HKT). (This
-was taken from [Functional Programming Jargon in Rust](https://functional.works-hub.com/learn/functional-programming-jargon-in-rust-1b555).
+### Examples
+Some other examples than listed below can be found under the examples directory in the source crate.
 
-### Functor
-A functor that takes an function and passes it's underlying type to that function. This is the same as
-calling map(func) on an Option or Result type. This only unifies that behaviour under one trait.
+Here is a very trivial example from a Leetcode problem
+```rust
+use partial_functional::prelude::*;
 
-## The Types
-### Option (Semigroup)
-If the underlying type is a Semigroup then this will perform the **combine** method on the left and right side
-if both are of the Some variant. Otherwise it returns the only Some variant or None if both are None.
+fn max_profit(prices: Vec<u32>) -> u32 {
+    let mut cheapest = Min::empty();
+    let mut profit = Max::empty();
 
-### Result (Semigroup)
-Returns the right side if the left is an Err variant. Otherwise returns the left side.
+    for price in prices {
+        cheapest = cheapest.combine(price.into());
+        profit = profit.combine(Max(price - cheapest.0));
+    }
 
-### Ordering (Semigroup)
-
-### Any & All
-
-### First & Last
-
-### Sum & Product
+    profit.0
+}
+```

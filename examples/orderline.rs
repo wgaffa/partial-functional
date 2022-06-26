@@ -6,7 +6,7 @@ use partial_functional::prelude::*;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 struct ProductLine {
-    code: String, // String is not part of a Semigroup (yet), therefore we cannot derive Semigroup
+    code: String,
     quantity: Sum<u32>,
     price: f32,
     line_total: Sum<f32>,
