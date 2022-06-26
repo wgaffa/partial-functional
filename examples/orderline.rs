@@ -1,7 +1,7 @@
 // This example was translated from an F# blog at https://fsharpforfunandprofit.com/posts/monoids-part2/
 // Note that the blog is very old but the information is still good.
 
-use monoid_derive::Semigroup;
+use partial_derive::Semigroup;
 use partial_functional::prelude::*;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
