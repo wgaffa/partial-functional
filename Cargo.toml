@@ -9,8 +9,8 @@ repository = "https://github.com/wgaffa/partial-functional"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-partfun_derive = { version = "0.1.0", path = "monoid_derive" }
 num-traits = "0.2.15"
+partfun_derive = "0.1.0"
 
 [dev-dependencies]
 paste = "1.0.7"
