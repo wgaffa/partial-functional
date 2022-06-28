@@ -41,6 +41,22 @@ impl<T: std::ops::Mul<Output = T>> Semigroup for Product<T> {
     }
 }
 
+macro_rules! impl_from {
+    (
+        $($t:ty),* $(,)?
+    ) => {
+        $(
+            impl From<Product<$t>> for $t {
+                fn from(value: Product<$t>) -> Self {
+                    value.0
+                }
+            }
+        )*
+    }
+}
+
+impl_from!(u8, i8, u16, i16, u32, i32, u64, i64, u128, i128, usize, isize, f32, f64);
+
 #[cfg(test)]
 mod tests {
     use crate::monoid::Monoid;

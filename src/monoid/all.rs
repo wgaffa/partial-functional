@@ -40,6 +40,12 @@ impl From<bool> for All {
     }
 }
 
+impl From<All> for bool {
+    fn from(value: All) -> Self {
+        value.0
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::monoid::Monoid;

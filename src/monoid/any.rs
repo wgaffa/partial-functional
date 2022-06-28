@@ -40,6 +40,12 @@ impl From<bool> for Any {
     }
 }
 
+impl From<Any> for bool {
+    fn from(value: Any) -> bool {
+        value.0
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::monoid::Monoid;

@@ -36,6 +36,22 @@ impl<T> From<T> for Sum<T> {
     }
 }
 
+macro_rules! impl_from {
+    (
+        $($t:ty),* $(,)?
+    ) => {
+        $(
+            impl From<Sum<$t>> for $t {
+                fn from(value: Sum<$t>) -> Self {
+                    value.0
+                }
+            }
+        )*
+    }
+}
+
+impl_from!(u8, i8, u16, i16, u32, i32, u64, i64, u128, i128, usize, isize, f32, f64);
+
 impl<T: std::ops::Add<Output = T>> Semigroup for Sum<T> {
     fn combine(self, rhs: Self) -> Self {
         Self(self.0 + rhs.0)
