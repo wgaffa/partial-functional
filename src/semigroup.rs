@@ -115,6 +115,14 @@ impl<T> Semigroup for Vec<T> {
         self
     }
 }
+
+impl<T: Eq + std::hash::Hash> Semigroup for std::collections::HashSet<T> {
+    fn combine(mut self, rhs: Self) -> Self {
+        self.extend(rhs.into_iter());
+        self
+    }
+}
+
 macro_rules! impl_semigroup_with_addition {
     ( $($x:ty),* ) => {
         $(
